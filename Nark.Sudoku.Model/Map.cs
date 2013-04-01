@@ -41,7 +41,7 @@ namespace Nark.Sudoku.Model
 
             foreach (Square s in squareList)
             {
-                s.Peers = squareList.FindAll(obj => (obj.Column == s.Column || obj.Column == s.Column || IsInOneUnit(obj, s)));
+                s.Peers = squareList.FindAll(obj => (obj.Column == s.Column || obj.Row == s.Row || IsInOneUnit(obj, s)));
                 s.Peers.Remove(s);
             }
         }
@@ -83,6 +83,60 @@ namespace Nark.Sudoku.Model
                     SetSquareValue(i, j, a[i][j].ToString());
                 }
             }
+        }
+
+        public void GenerateCompletedMap()
+        {
+            List<List<string>> triedValue = new List<List<string>>();
+            for (int i = 0; i < this.squareList.Count; i++)
+            {
+                triedValue.Add(new List<string>());
+            }
+            Random r = new Random();
+
+            for (int i = 0; i < this.squareList.Count; i++)
+            {
+                Square s = squareList[i];
+                List<string> plist = s.ValidateValue.FindAll(obj => (!triedValue[i].Exists(obj2 => (obj2 == obj))));
+                if (plist.Count > 0)
+                {
+                    s.SquareValue = plist[r.Next(0, plist.Count)];
+                    triedValue[i].Add(s.SquareValue);
+                    for (int j = i + 1; j < this.squareList.Count; j++)
+                    {
+                        triedValue[j] = new List<string>();
+                    }
+                }
+                else
+                {
+                    s.SquareValue = "0";
+                    i -= 2;
+                }
+                //DrawMap();
+            }
+        }
+
+        public void DrawMap()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                Console.WriteLine();
+                if ((i) % 3 == 0)
+                    Console.WriteLine("---------| ---------| ---------|");
+                for (int j = 0; j < 9; j++)
+                {
+                    Square s = this.SquareList.Find(obj => obj.Row == i && obj.Column == j);
+                    if (!s.IsValidate)
+                        Console.Write("!");
+                    else
+                        Console.Write(" ");
+                    Console.Write(s.SquareValue + " ");
+                    if ((j + 1) % 3 == 0)
+                        Console.Write("| ");
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("---------| ---------| ---------|");
         }
     }
 }

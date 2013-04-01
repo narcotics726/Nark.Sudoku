@@ -31,23 +31,22 @@ namespace Nark.Sudoku.Model
             get { return squareValue; }
             set
             {
-                isValidate = possibleValue.Exists(obj => obj == value);
                 squareValue = value;
-                if (isValidate)
-                {
-                    foreach (Square s in this.peers)
-                    {
-                        s.PossibleValue.Remove(value);
-                    }
-                }
             }
         }
 
         bool isValidate;
         public bool IsValidate
         {
-            get { return isValidate; }
-            set { isValidate = value; }
+            get 
+            {
+                foreach (Square s in this.peers)
+                {
+                    if (s.squareValue == this.squareValue)
+                        return false;
+                }
+                return true;
+            }
         }
 
         List<Square> peers;
@@ -58,12 +57,20 @@ namespace Nark.Sudoku.Model
             set { peers = value; }
         }
 
-        List<string> possibleValue;
+        List<string> validateValue;
 
-        public List<string> PossibleValue
+        public List<string> ValidateValue
         {
-            get { return possibleValue; }
-            set { possibleValue = value; }
+            get
+            {
+                List<string> initPossibleValues = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+                foreach (Square s in this.peers)
+                {
+                    initPossibleValues.Remove(s.squareValue);
+                }
+                return initPossibleValues;
+            }
+            set { validateValue = value; }
         }
 
         public Square(int _row, int _col, string sValue = "0")
@@ -72,13 +79,13 @@ namespace Nark.Sudoku.Model
             row = _row;
             squareValue = sValue;
             peers = new List<Square>();
-            possibleValue = new List<string>();
+            validateValue = new List<string>();
             for (int i = 1; i <= 9; i++)
             {
-                possibleValue.Add(i.ToString());
+                validateValue.Add(i.ToString());
             }
         }
 
-
+        //List<string> initPossibleValues = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
     }
 }

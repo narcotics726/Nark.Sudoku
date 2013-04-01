@@ -11,14 +11,15 @@ namespace Nark.Sudoku.Test
     {
         static void Main(string[] args)
         {
-            Map m = new Map();
-            DrawMap(m);
+            Map m;
             while (true)
             {
                 Console.WriteLine("Input: rowNum,lineNum,value");
                 string inputLine = Console.ReadLine();
+                System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
                 if (inputLine == "win")
                 {
+                    m = new Map();
                     for (int i = 0; i < 9; i++)
                     {
                         for (int j = 0; j < 9; j++)
@@ -29,11 +30,21 @@ namespace Nark.Sudoku.Test
                         }
                     }
                 }
+                else if (inputLine=="gen")
+                {
+                    m = new Map();
+                    st.Start();
+                    m.GenerateCompletedMap();
+                    DrawMap(m);
+                    st.Stop();
+                    Console.WriteLine(st.Elapsed.TotalSeconds);
+                }
                 else
                 {
 
                     try
                     {
+                        m = new Map();
                         string[] input = inputLine.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                         m.SetSquareValue(int.Parse(input[0]), int.Parse(input[1]), input[2]);
                     }
@@ -44,7 +55,6 @@ namespace Nark.Sudoku.Test
                     }
                 }
 
-                DrawMap(m);
                 if (m.IsWin)
                 {
                     Console.WriteLine("Win");
