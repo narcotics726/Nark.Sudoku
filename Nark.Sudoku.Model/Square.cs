@@ -35,10 +35,10 @@ namespace Nark.Sudoku.Model
             }
         }
 
-        bool isValidate;
+
         public bool IsValidate
         {
-            get 
+            get
             {
                 foreach (Square s in this.peers)
                 {
@@ -84,6 +84,12 @@ namespace Nark.Sudoku.Model
             {
                 validateValue.Add(i.ToString());
             }
+        }
+
+        public bool IsInOneUnit(Square obj)
+        {
+            return (obj.Column * 3 / 9 == Column * 3 / 9
+                 && obj.Row * 3 / 9 == Row * 3 / 9);
         }
 
         //List<string> initPossibleValues = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9" };

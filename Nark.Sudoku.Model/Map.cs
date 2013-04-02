@@ -8,16 +8,9 @@ namespace Nark.Sudoku.Model
 {
     public class Map
     {
+        public GameEnum.MapStat MapStatus = GameEnum.MapStat.Empty;
+
         List<Square> squareList;
-
-        bool isWin;
-
-        public bool IsWin
-        {
-            get { return isWin; }
-            set { isWin = value; }
-        }
-
         public List<Square> SquareList
         {
             get { return squareList; }
@@ -41,32 +34,29 @@ namespace Nark.Sudoku.Model
 
             foreach (Square s in squareList)
             {
-                s.Peers = squareList.FindAll(obj => (obj.Column == s.Column || obj.Row == s.Row || IsInOneUnit(obj, s)));
+                s.Peers = squareList.FindAll(obj => (obj.Column == s.Column || obj.Row == s.Row || s.IsInOneUnit(obj)));
                 s.Peers.Remove(s);
             }
-        }
-
-        private bool IsInOneUnit(Square obj, Square s)
-        {
-            return (obj.Column * 3 / columnNum == s.Column * 3 / columnNum
-                 && obj.Row * 3 / rowNum == s.Row * 3 / rowNum);
         }
 
         public void SetSquareValue(int row, int col, string value)
         {
             Square s = this.squareList.Find(obj => obj.Row == row && obj.Column == col);
             s.SquareValue = value;
-            isWin = CheckGameStatusIsWin();
+            CheckGameStatus();
         }
 
-        private bool CheckGameStatusIsWin()
+        private void CheckGameStatus()
         {
-            foreach (Square s in squareList)
+            if (MapStatus == GameEnum.MapStat.Filling)
             {
-                if (!s.IsValidate)
-                    return false;
+                foreach (Square s in squareList)
+                {
+                    if (!s.IsValidate)
+                        return;
+                }
+                MapStatus = GameEnum.MapStat.Completed;
             }
-            return true;
         }
 
         public Square GetSquare(int row, int col)
@@ -74,18 +64,7 @@ namespace Nark.Sudoku.Model
             return this.squareList.Find(obj => obj.Row == row && obj.Column == col);
         }
 
-        public void SetValue(int[][] a)
-        {
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    SetSquareValue(i, j, a[i][j].ToString());
-                }
-            }
-        }
-
-        public void GenerateCompletedMap()
+        public void Init()
         {
             List<List<string>> triedValue = new List<List<string>>();
             for (int i = 0; i < this.squareList.Count; i++)
@@ -102,20 +81,51 @@ namespace Nark.Sudoku.Model
                 {
                     s.SquareValue = plist[r.Next(0, plist.Count)];
                     triedValue[i].Add(s.SquareValue);
-                    for (int j = i + 1; j < this.squareList.Count; j++)
-                    {
-                        triedValue[j] = new List<string>();
-                    }
+
                 }
-                else
+                else    //trace back
                 {
                     s.SquareValue = "0";
+                    //Once we trace a square back and fill it again with a new value, the following square's tried history should be cleared;
+                    for (int j = i + 1; j < this.squareList.Count; j++)
+                    {
+                        triedValue[j].Clear();
+                    }
                     i -= 2;
+
                 }
-                //DrawMap();
             }
         }
 
+        public void EraseRandomSquare()
+        {
+            Random r = new Random();
+            while (true)
+            {
+                Square s = squareList[r.Next(0, squareList.Count)];
+                string temp = s.SquareValue;
+                s.SquareValue = "0";
+                if (!this.HasUniqueSolution())
+                {
+                    s.SquareValue = temp;
+                    break;
+                }
+            }
+        }
+
+        public bool HasUniqueSolution()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<List<Square>> Solver(List<Square> puzzle)
+        {
+            List<List<string>> triedValues = new List<List<string>>();
+            throw new NotImplementedException();
+        }
+
+
+        #region forTest
         public void DrawMap()
         {
             for (int i = 0; i < 9; i++)
@@ -138,5 +148,8 @@ namespace Nark.Sudoku.Model
             Console.WriteLine();
             Console.WriteLine("---------| ---------| ---------|");
         }
+        #endregion
+
+
     }
 }

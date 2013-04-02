@@ -34,7 +34,7 @@ namespace Nark.Sudoku.Test
                 {
                     m = new Map();
                     st.Start();
-                    m.GenerateCompletedMap();
+                    m.Init();
                     DrawMap(m);
                     st.Stop();
                     Console.WriteLine(st.Elapsed.TotalSeconds);
@@ -55,7 +55,7 @@ namespace Nark.Sudoku.Test
                     }
                 }
 
-                if (m.IsWin)
+                if (m.MapStatus == GameEnum.MapStat.Completed)
                 {
                     Console.WriteLine("Win");
                     break;
