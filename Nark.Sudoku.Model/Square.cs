@@ -40,12 +40,19 @@ namespace Nark.Sudoku.Model
         {
             get
             {
-                foreach (Square s in this.peers)
+                if (squareValue != "0")
                 {
-                    if (s.squareValue == this.squareValue)
-                        return false;
+                    foreach (Square s in this.peers)
+                    {
+                        if (s.squareValue == this.squareValue)
+                            return false;
+                    }
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return true;
+                }
             }
         }
 

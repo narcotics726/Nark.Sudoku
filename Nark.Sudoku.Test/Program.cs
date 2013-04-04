@@ -11,7 +11,7 @@ namespace Nark.Sudoku.Test
     {
         static void Main(string[] args)
         {
-            Map m;
+            Map m = new Map();
             while (true)
             {
                 Console.WriteLine("Input: rowNum,lineNum,value");
@@ -38,6 +38,11 @@ namespace Nark.Sudoku.Test
                     DrawMap(m);
                     st.Stop();
                     Console.WriteLine(st.Elapsed.TotalSeconds);
+                }
+                else if (inputLine == "erase")
+                {
+                    m.EraseRandomSquare();
+                    DrawMap(m);
                 }
                 else
                 {

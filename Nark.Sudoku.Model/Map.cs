@@ -52,7 +52,7 @@ namespace Nark.Sudoku.Model
             {
                 foreach (Square s in squareList)
                 {
-                    if (!s.IsValidate)
+                    if (s.SquareValue == "0" || !s.IsValidate)
                         return;
                 }
                 MapStatus = GameEnum.MapStat.Completed;
@@ -95,35 +95,114 @@ namespace Nark.Sudoku.Model
 
                 }
             }
+
+            MapStatus = GameEnum.MapStat.Init;
         }
 
-        public void EraseRandomSquare()
+        public void EraseRandomSquare(int eraseCount = 40)
         {
             Random r = new Random();
-            while (true)
+            List<Square> emptySquare = new List<Square>();
+            while (emptySquare.Count < eraseCount)
             {
+                emptySquare = squareList.FindAll(obj => obj.SquareValue == "0");
                 Square s = squareList[r.Next(0, squareList.Count)];
-                string temp = s.SquareValue;
-                s.SquareValue = "0";
-                if (!this.HasUniqueSolution())
+                if (s.SquareValue != "0")
                 {
-                    s.SquareValue = temp;
-                    break;
+                    string temp = s.SquareValue;
+                    s.SquareValue = "0";
+                    if (!this.HasUniqueSolution())
+                    {
+                        s.SquareValue = temp;
+                        continue;
+                    }
+                    DrawMap();
                 }
             }
+            MapStatus = GameEnum.MapStat.Filling;
         }
 
         public bool HasUniqueSolution()
         {
-            throw new NotImplementedException();
+            List<Square> emptySquares = squareList.FindAll(obj => obj.SquareValue == "0");
+            emptySquares.Sort(delegate(Square x, Square y) { return y.ValidateValue.Count.CompareTo(x.ValidateValue.Count); });
+            List<List<string>> triedValue = new List<List<string>>();
+            for (int i = 0; i < this.squareList.Count; i++)
+            {
+                triedValue.Add(new List<string>());
+            }
+            Random r = new Random();
+            for (int i = 0; i < emptySquares.Count; i++)
+            {
+                Square s = emptySquares[i];
+                List<string> plist = s.ValidateValue.FindAll(obj => (!triedValue[i].Exists(obj2 => (obj2 == obj))));
+                if (plist.Count > 0)
+                {
+                    s.SquareValue = plist[r.Next(0, plist.Count)];
+                    triedValue[i].Add(s.SquareValue);
+
+                }
+                else    //trace back
+                {
+                    s.SquareValue = "0";
+                    //Once we trace a square back and fill it again with a new value, the following square's tried history should be cleared;
+                    for (int j = i + 1; j < this.squareList.Count; j++)
+                    {
+                        triedValue[j].Clear();
+                    }
+                    i -= 2;
+                    if (i < 0)
+                    {
+                        foreach (Square ss in emptySquares)
+                        {
+                            ss.SquareValue = "0";
+                        }
+                        return false;
+                    }
+                }
+            }
+            foreach (Square s in emptySquares)
+            {
+                s.SquareValue = "0";
+            }
+            return true;
         }
 
-        public List<List<Square>> Solver(List<Square> puzzle)
+        public List<Square> Solver(Map m)
         {
-            List<List<string>> triedValues = new List<List<string>>();
-            throw new NotImplementedException();
-        }
+            List<Square> emptySquares = m.squareList.FindAll(obj => obj.SquareValue == "0");
+            emptySquares.Sort(delegate(Square x, Square y) { return y.ValidateValue.Count.CompareTo(x.ValidateValue.Count); });
+            List<List<string>> triedValue = new List<List<string>>();
+            for (int i = 0; i < this.squareList.Count; i++)
+            {
+                triedValue.Add(new List<string>());
+            }
+            Random r = new Random();
+            for (int i = 0; i < emptySquares.Count; i++)
+            {
+                Square s = emptySquares[i];
+                List<string> plist = s.ValidateValue.FindAll(obj => (!triedValue[i].Exists(obj2 => (obj2 == obj))));
+                if (plist.Count > 0)
+                {
+                    s.SquareValue = plist[r.Next(0, plist.Count)];
+                    triedValue[i].Add(s.SquareValue);
 
+                }
+                else    //trace back
+                {
+                    s.SquareValue = "0";
+                    //Once we trace a square back and fill it again with a new value, the following square's tried history should be cleared;
+                    for (int j = i + 1; j < this.squareList.Count; j++)
+                    {
+                        triedValue[j].Clear();
+                    }
+                    i -= 2;
+                    if (i < 0)
+                        return null;
+                }
+            }
+            return emptySquares;
+        }
 
         #region forTest
         public void DrawMap()
