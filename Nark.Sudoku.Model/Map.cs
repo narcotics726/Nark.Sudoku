@@ -99,23 +99,32 @@ namespace Nark.Sudoku.Model
             MapStatus = GameEnum.MapStat.Init;
         }
 
+        public void FullInit()
+        {
+            foreach (Square s in this.squareList)
+            {
+                s.SquareValue = "0";
+            }
+            SudokuHelper.Solve(this, true);
+            MapStatus = GameEnum.MapStat.Init;
+        }
+
         public void EraseRandomSquare(int eraseCount = 40)
         {
             Random r = new Random();
             List<Square> emptySquare = new List<Square>();
             while (emptySquare.Count < eraseCount)
             {
-                emptySquare = squareList.FindAll(obj => obj.SquareValue == "0");
+                //emptySquare = squareList.FindAll(obj => obj.SquareValue == "0");
                 Square s = squareList[r.Next(0, squareList.Count)];
                 if (s.SquareValue != "0")
                 {
                     string temp = s.SquareValue;
-                    s.SquareValue = "0";
-                    if (!this.HasUniqueSolution())
-                    {
-                        s.SquareValue = temp;
+                    if (!SudokuHelper.CanDig(this, s))
                         continue;
-                    }
+                    s.SquareValue = "0";
+                    emptySquare.Add(s);
+                    emptySquare.ForEach(obj => obj.SquareValue = "0");
                     //DrawMap();
                 }
             }
@@ -168,7 +177,7 @@ namespace Nark.Sudoku.Model
             return true;
         }
 
-        
+
 
         #region forTest
         public void DrawMap()

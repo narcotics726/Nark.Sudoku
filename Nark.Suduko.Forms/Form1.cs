@@ -99,7 +99,7 @@ namespace Nark.Suduko.Forms
         private void InitSuduku(int blankCount = 35)
         {
             m = new Map();
-            m.Init();
+            m.FullInit();
             m.EraseRandomSquare(blankCount);
             List<TextBox> txtList = new List<TextBox>();
             for (int i = 0; i < 9; i++)
