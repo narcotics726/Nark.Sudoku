@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="GameEnum.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Solver.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

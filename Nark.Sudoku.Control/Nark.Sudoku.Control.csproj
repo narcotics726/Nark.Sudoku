@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{11ADFBBC-71A9-4B52-8A93-4273DE195325}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{17CB512A-AFB9-436A-BAF8-12417ABFC83F}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nark.Sudoku.Test</RootNamespace>
-    <AssemblyName>Nark.Sudoku.Test</AssemblyName>
+    <RootNamespace>Nark.Sudoku.Control</RootNamespace>
+    <AssemblyName>Nark.Sudoku.Control</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,17 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nark.Sudoku.Control\Nark.Sudoku.Control.csproj">
-      <Project>{17cb512a-afb9-436a-baf8-12417abfc83f}</Project>
-      <Name>Nark.Sudoku.Control</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nark.Sudoku.Model\Nark.Sudoku.Model.csproj">
       <Project>{9416ea43-a31a-4895-b292-e2e7edf4d202}</Project>
       <Name>Nark.Sudoku.Model</Name>

@@ -116,7 +116,7 @@ namespace Nark.Sudoku.Model
                         s.SquareValue = temp;
                         continue;
                     }
-                    DrawMap();
+                    //DrawMap();
                 }
             }
             MapStatus = GameEnum.MapStat.Filling;
@@ -168,41 +168,7 @@ namespace Nark.Sudoku.Model
             return true;
         }
 
-        public List<Square> Solver(Map m)
-        {
-            List<Square> emptySquares = m.squareList.FindAll(obj => obj.SquareValue == "0");
-            emptySquares.Sort(delegate(Square x, Square y) { return y.ValidateValue.Count.CompareTo(x.ValidateValue.Count); });
-            List<List<string>> triedValue = new List<List<string>>();
-            for (int i = 0; i < this.squareList.Count; i++)
-            {
-                triedValue.Add(new List<string>());
-            }
-            Random r = new Random();
-            for (int i = 0; i < emptySquares.Count; i++)
-            {
-                Square s = emptySquares[i];
-                List<string> plist = s.ValidateValue.FindAll(obj => (!triedValue[i].Exists(obj2 => (obj2 == obj))));
-                if (plist.Count > 0)
-                {
-                    s.SquareValue = plist[r.Next(0, plist.Count)];
-                    triedValue[i].Add(s.SquareValue);
-
-                }
-                else    //trace back
-                {
-                    s.SquareValue = "0";
-                    //Once we trace a square back and fill it again with a new value, the following square's tried history should be cleared;
-                    for (int j = i + 1; j < this.squareList.Count; j++)
-                    {
-                        triedValue[j].Clear();
-                    }
-                    i -= 2;
-                    if (i < 0)
-                        return null;
-                }
-            }
-            return emptySquares;
-        }
+        
 
         #region forTest
         public void DrawMap()

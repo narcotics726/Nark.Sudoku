@@ -30,11 +30,12 @@ namespace Nark.Sudoku.Test
                         }
                     }
                 }
-                else if (inputLine=="gen")
+                else if (inputLine == "gen")
                 {
                     m = new Map();
                     st.Start();
                     m.Init();
+                    m.EraseRandomSquare(30);
                     DrawMap(m);
                     st.Stop();
                     Console.WriteLine(st.Elapsed.TotalSeconds);
@@ -43,6 +44,14 @@ namespace Nark.Sudoku.Test
                 {
                     m.EraseRandomSquare();
                     DrawMap(m);
+                }
+                else if (inputLine == "solve")
+                {
+                    st.Restart();
+                    m = SudokuHelper.Solve(m);
+                    st.Stop();
+                    DrawMap(m);
+                    Console.WriteLine(st.Elapsed.TotalSeconds);
                 }
                 else
                 {
