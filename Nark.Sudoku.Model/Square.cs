@@ -40,18 +40,13 @@ namespace Nark.Sudoku.Model
         {
             get
             {
-                if (squareValue != "0")
+                if (squareValue != "0" && this.ValidateValue.Exists(obj => obj == squareValue))
                 {
-                    foreach (Square s in this.peers)
-                    {
-                        if (s.squareValue == this.squareValue)
-                            return false;
-                    }
                     return true;
                 }
                 else
                 {
-                    return true;
+                    return false;
                 }
             }
         }
@@ -75,7 +70,7 @@ namespace Nark.Sudoku.Model
                 {
                     initPossibleValues.Remove(s.squareValue);
                 }
-                return initPossibleValues;
+                return validateValue = initPossibleValues;
             }
             set { validateValue = value; }
         }

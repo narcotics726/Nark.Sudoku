@@ -159,9 +159,9 @@ namespace Nark.Suduko.Forms
         void txtBox_TextChanged(object sender, EventArgs e)
         {
             TextBox tb = (TextBox)sender;
+            Point p = ((AdditionalInfo)tb.Tag).Point;
             if (tb.Text != "0" && !string.IsNullOrWhiteSpace(tb.Text))
             {
-                Point p = ((AdditionalInfo)tb.Tag).Point;
                 m.SetSquareValue(p.X, p.Y, tb.Text);
                 if (!m.GetSquare(p.X, p.Y).IsValidate)
                 {
@@ -183,6 +183,7 @@ namespace Nark.Suduko.Forms
             {
                 tb.BackColor = Color.White;
                 ((AdditionalInfo)tb.Tag).Color = tb.BackColor;
+                m.SetSquareValue(p.X, p.Y, "0");
             }
         }
 
